@@ -52,7 +52,6 @@ class AdminController extends Controller
         $data = request()->validate([
             'username' => "required",
             'fullname' => "required",
-            'gender' => "required",
             'phone' => "required",
             'address' => "required",
             'email' => "required|unique:users",
@@ -62,7 +61,6 @@ class AdminController extends Controller
 
         $item['username'] = request("username");
         $item['fullname'] = request("fullname");
-        $item['gender'] = request("gender");
         $item['phone'] = request("phone");
         $item['address'] = request("address");
         $item['email'] = request("email");

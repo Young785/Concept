@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get("/", "MainController@home");
+
 Route::get("/pages/login", "AdminController@loginPage");
 Route::post("/pages/login", "AdminController@login");
 Route::get("/pages/register", "AdminController@registerPage");
@@ -45,6 +47,43 @@ Route::group(['prefix' => '/admin'], function () {
     Route::delete("/products/{id}", "AdminController@deleteProduct")->middleware("access");
     Route::patch("/products/edit/{id}", "AdminController@editProduct")->middleware("access");
 
+});
+
+// Main Page
+
+Route::group(['prefix' => '/main/'], function () {
+    Route::get('register', "MainController@registerPage");
+    Route::post('register', "MainController@register");
+    Route::get('verify', "MainController@verifyPage");
+    Route::get('verify/verificationId={hash}', "MainController@verify");
+    Route::get('login', "MainController@loginPage");
+    Route::post('login', "MainController@login");
+    Route::get('forgot-password', "MainController@forgotPage");
+    Route::get('forgot-password/reset-pass', "MainController@resetPass");
+    Route::get('forgot-password/reset-password={id}', "MainController@resetPassword");
+    Route::post('forgot-password/reset-password/email={email}', "MainController@reset");
+
+    Route::get('category/{slug}', "MainController@catSlug");
+    Route::get('cart', "MainController@cart");
+    Route::get('add-to-cart/{id}', 'MainController@addToCart');
+    Route::patch('update-cart', "MainController@editCart");
+    Route::patch('update-cart', "MainController@editCart");
+
+    Route::get('about', "MainController@about");
+    Route::get('contact', "MainController@contact");
+
+    Route::any('search', "MainController@search");
+});
+
+
+Route::group(['prefix' => '/account/'], function () {
+    Route::get('/', "MainController@index")->middleware("users");
+    Route::get('/re_order', "MainController@re_order")->middleware("users");
+    Route::get('/profile', "MainController@profile")->middleware("users");
+    Route::get('/order_history', "MainController@orderHistory")->middleware("users");
+    Route::get('/address', "MainController@addressPage")->middleware("users");
+    Route::get('/payment', "MainController@paymentPage")->middleware("users");
+    Route::get('/com_preference', "MainController@comprePage")->middleware("users");
 });
 
 Route::get('/markAsRead', function () {

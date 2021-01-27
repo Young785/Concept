@@ -31,8 +31,6 @@
                                 <div class="notification-list">
                                     <div class="list-group">       
                                             @foreach ($notification as $item)
-                                {{-- {{ dd($item) }} --}}
-
                                                 <a href="#" onclick="markRead()" class="list-group-item list-group-item-action active">
                                                     <div class="notification-info">
                                                         <div class="notification-list-user-img">
@@ -61,7 +59,7 @@
                     </li>
                     <li class="nav-item dropdown nav-user">
                         <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @if(count([$user->user_image]) != 1)
+                            @if($user->user_image == null)
                                 <img src="/assets/images/default.png" alt="" class="user-avatar-md rounded-circle">
                                 @else
                                 <img src="{{ asset("/images/users") }}/{{ $user->user_image }}" alt="" class="user-avatar-md rounded-circle">

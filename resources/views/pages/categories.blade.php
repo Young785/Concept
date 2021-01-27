@@ -41,11 +41,12 @@
                                         </ol>
                                     </nav>
                                 </div>
+                                <p>---> Note there should only be a unique Category!</p>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end pageheader  -->
+                    <!-- end pageheader  --> 
                     @if (session()->has("msg"))
                         <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
                             You have Successfully added a new Category!!
