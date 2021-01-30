@@ -1,5 +1,5 @@
-@include('layouts.vendorheader')
-@section('title', 'Concept - Blank Page')
+@section('title', 'Concept - Your Products')
+@include('layouts.vendor.header')
 <body>
     <!-- ============================================================== -->
     <!-- main wrapper -->
@@ -8,14 +8,14 @@
         <!-- ============================================================== -->
         <!-- navbar -->
         <!-- ============================================================== -->
-        @include('layouts.vendornavbar')
+        @include('layouts.vendor.navbar')
         <!-- ============================================================== -->
         <!-- end navbar -->
         <!-- ============================================================== -->
         <!-- ============================================================== -->
         <!-- left sidebar -->
         <!-- ============================================================== -->
-        @include('layouts.vendorsidebar')
+        @include('layouts.vendor.sidebar')
         <!-- ============================================================== -->
         <!-- end left sidebar -->
         <!-- ============================================================== -->
@@ -31,74 +31,61 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">All Categories</h2>
-                                <p class="pageheader-text">Available Categories</p>
+                                <h2 class="pageheader-title">Your Porducts</h2>
+                                <p class="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/admin" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                                            <li class="breadcrumb-item"><a href="/vendor" class="breadcrumb-link">Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Your Porducts</li>
                                         </ol>
                                     </nav>
                                 </div>
-                                <p>---> Note there should only be a unique Category!</p>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end pageheader  --> 
+                    <!-- end pageheader  -->
                     @if (session()->has("msg"))
                         <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
-                            You have Successfully added a new Category!!
+                            Product Created Successfully!
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         </div>
                     @endif
-                    @if (session()->has("catDeleted"))
-                    <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
-                        Category Deleted Successfully!
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    </div>
+                    @if (session()->has("prodDeleted"))
+                        <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
+                            Product Deleted Successfully!
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        </div>
                     @endif
-                    @if (session()->has("catEdited"))
-                    <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
-                        Category Edited Successfully!
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    </div>
+                    @if (session()->has("prodEdited"))
+                        <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
+                            Product Edited Successfully!
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        </div>
                     @endif
                     <!-- ============================================================== -->
                     <div class="ecommerce-widget">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="row">
-                                    @if(count($categories) == null)
-                                    <h1 class="text-center"><b>No Category Available</b> </h1>
+                                    @if(count($products) == null)
+                                    <h1 class="text-center"><b>No Products Available</b> </h1>
                                         @else
-                                            @foreach ($categories as $category)
+                                        @foreach ($products as $product)
                                             <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
                                                 <div class="product-thumbnail">
                                                     <div class="product-img-head">
                                                         <div class="product-img">
-                                                            <img src="{{ asset("images/category") }}/{{ $category->category_image }}" alt="{{ $category->category_name }}" class="category-img img-fluid"></div>
+                                                            <img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" class="col-xs-12 col-md-12 col-lg-12 cat-img category-img img-fluid" alt="">  
+                                                        </div>
                                                         <div class="ribbons bg-success"></div>
                                                         <div class="ribbons-text">New</div>
                                                         <div class=""><a href="#" class="product-wishlist-btn"><i class="fas fa-heart"></i></a></div>
                                                     </div>
                                                     <div class="product-content">
                                                         <div class="product-content-head">
-                                                            <h3 class="product-title">{{ $category->category_name }}</h3>
-                                                            <div class="dropdown dd-action">
-                                                                <i class=" fas fa-ellipsis-v dd-i" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true">
-                                                                </i>
-                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                  <a class="dropdown-item editDropdown" data-toggle="modal" data-target="#edit{{ $category->id }}"  data-id="{{ $category->id }}"  href="#">Edit</a>
-                                                                  <a class="dropdown-item"  data-toggle="modal" data-target="#delete{{ $category->id }}" href="#">Delete</a>
-                                                                </div>
-                                                            </div>
-                                                            {{-- <script>
-                                                                function editCat(){
-                                                                    window.history.replaceState (null, null, "?id={{ $category->id }}")
-                                                                }
-                                                            </script> --}}
+                                                            <h3 class="product-title">{{ $product->name }}</h3>
                                                             <div class="product-rating d-inline-block">
                                                                 <i class="fa fa-fw fa-star"></i>
                                                                 <i class="fa fa-fw fa-star"></i>
@@ -106,28 +93,36 @@
                                                                 <i class="fa fa-fw fa-star"></i>
                                                                 <i class="fa fa-fw fa-star"></i>
                                                             </div>
+                                                            <div class="product-price">${{ $product->price }}</div>
+                                                        </div>
+                                                        <div class="dropdown dd-action">
+                                                            <i class=" fas fa-ellipsis-v dd-i" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"></i>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a class="dropdown-item editDropdown" data-toggle="modal" data-target="#edit{{ $product->id }}"  data-id="{{ $product->id }}"  href="#">Edit</a>
+                                                                <a class="dropdown-item"  data-toggle="modal" data-target="#delete{{ $product->id }}" href="#">Delete</a>
+                                                            </div>
                                                         </div>
                                                         <div class="product-btn">
-                                                            <p>About: {{ $category->category_description }}</p>
+                                                            <p>About: {{ $product->description }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal fade" id="delete{{ $category->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+                                            <div class="modal fade" id="delete{{ $product->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="deleteLabel">Delete Category</h5>
+                                                            <h5 class="modal-title" id="deleteLabel">Delete Product</h5>
                                                             <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">×</span>
                                                                     </a>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Are you sure you want to delete this Category?</p>
+                                                            <p>Are you sure you want to delete this Product?</p>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <a href="#" class="btn btn-secondary" data-dismiss="modal">No</a>
-                                                            <form action="/admin/categories/{{ $category->id }}" method="POST">
+                                                            <form action="/vendor/products/{{ $product->id }}" method="POST">
                                                                 @csrf
                                                                 @METHOD('DELETE')
                                                                 <button class="btn btn-primary" type="submit">Yes</button>
@@ -136,7 +131,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal fade" id="edit{{ $category->id }}" tabindex="-1"role="dialog" aria-labelledby="editLabel" aria-hidden="true">
+                                            <div class="modal fade" id="edit{{ $product->id }}" tabindex="-1"role="dialog" aria-labelledby="editLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -146,24 +141,27 @@
                                                             </a>
                                                         </div>
                                                         @php
-                                                            $cat = App\Category::where("id", $category->id)->first();
+                                                            $prod = App\Product::where("id", $product->id)->first();
                                                         @endphp
                                                         <div class="modal-body">
-                                                            <form action="/admin/categories/edit/{{ $category->id }}" method="POST" enctype="multipart/form-data">
+                                                            <form action="/vendor/products/edit/{{ $product->id }}" method="POST" enctype="multipart/form-data">
                                                                 @csrf
                                                                 @METHOD('PATCH')
                                                                 <div class="form-group">
-                                                                    <label for="inputText3" class="col-form-label">Category Name</label>
-                                                                    <input id="inputText3" type="text" name="category_name" required value="{{ $cat->category_name }}" class="form-control">
+                                                                    <label for="inputText3" class="col-form-label">Product Name</label>
+                                                                    <input id="inputText3" type="text" name="name" required value="{{ $prod->name }}" class="form-control">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="inputText3" class="col-form-label">Category Image</label>
-                                                                    <p>This field is Optional!</p>
-                                                                    <input id="inputText3" type="file" name="category_image" value="{{ $cat->category_image }}" class="form-control">
+                                                                    <label for="inputText3" class="col-form-label">Product Description</label>
+                                                                    <input id="inputText3" type="text" name="description" required value="{{ $prod->description }}" class="form-control">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="inputText3" class="col-form-label">Category Description</label>
-                                                                    <input id="inputText3" type="text" name="category_description" required value="{{ $cat->category_description }}" class="form-control">
+                                                                    <label for="inputText3" class="col-form-label">Product Price</label>
+                                                                    <input id="inputText3" type="text" name="price" required value="{{ $prod->price }}" class="form-control">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="inputText3" class="col-form-label">Product Quantity</label>
+                                                                    <input id="inputText3" type="text" name="quantity" required value="{{ $prod->quantity }}" class="form-control">
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -184,4 +182,4 @@
             </div>
             <!-- ============================================================== -->
           
-@include('layouts.vendorfooter')
+@include('layouts.vendor.footer')

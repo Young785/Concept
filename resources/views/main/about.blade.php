@@ -1,6 +1,6 @@
 @section('title', 'Spree - About Us')
 @include('layouts.main.header')
-<link rel="stylesheet" type="text/css" href="css/about.css">
+<link rel="stylesheet" type="text/css" href="/main/css/about.css">
     @include('layouts.main.navbar')
     <section class="about">
         <div class="aboutBanner">

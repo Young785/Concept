@@ -13,6 +13,7 @@
 Route::get("/", "MainController@home");
 
 Route::get("/pages/login", "AdminController@loginPage");
+Route::get("/pages/login/verify/verificationId={id}", "AdminController@loginPage");
 Route::post("/pages/login", "AdminController@login");
 Route::get("/pages/register", "AdminController@registerPage");
 Route::post("/pages/register", "AdminController@register");
@@ -49,6 +50,32 @@ Route::group(['prefix' => '/admin'], function () {
 
 });
 
+
+//Vendor Page 
+
+Route::group(['prefix' => '/vendor/'], function () {
+    Route::get("/", "VendorController@index")->middleware("vendor");
+    Route::get("account", "VendorController@account")->middleware("vendor");
+    Route::patch("account", "VendorController@editAccount")->middleware("vendor");
+    Route::get("customers-order", "VendorController@custOrderPage")->middleware("vendor");
+    Route::get("customers-order/{id}", "VendorController@orderPage")->middleware("vendor");
+    Route::post("customers-order/{id}", "VendorController@completeOrder")->middleware("vendor");
+
+    Route::get("categories", "VendorController@categories")->middleware("vendor");
+    Route::get("vendor-categories", "VendorController@myCat")->middleware("vendor");
+    Route::get("add-category", "VendorController@addCategoryPage")->middleware("vendor");
+    Route::post("add-category", "VendorController@addCategory")->middleware("vendor");
+    Route::delete("categories/{id}", "VendorController@deleteCategory")->middleware("vendor");
+    Route::patch("categories/edit/{id}", "VendorController@editCategory")->middleware("vendor");
+
+    Route::get("products", "VendorController@products")->middleware("vendor");
+    Route::get("vendor-products", "VendorController@myProducts")->middleware("vendor");
+    Route::get("add-products", "VendorController@addProductsPage")->middleware("vendor");
+    Route::post("add-products", "VendorController@addProducts")->middleware("vendor");
+    Route::delete("products/{id}", "VendorController@deleteProduct")->middleware("vendor");
+    Route::patch("products/edit/{id}", "VendorController@editProduct")->middleware("vendor");
+    
+});
 // Main Page
 
 Route::group(['prefix' => '/main/'], function () {
@@ -64,13 +91,21 @@ Route::group(['prefix' => '/main/'], function () {
     Route::post('forgot-password/reset-password/email={email}', "MainController@reset");
 
     Route::get('category/{slug}', "MainController@catSlug");
+    Route::get('category/{slug}/product/{id}', "MainController@fullDetails");
     Route::get('cart', "MainController@cart");
     Route::get('add-to-cart/{id}', 'MainController@addToCart');
     Route::patch('update-cart', "MainController@editCart");
-    Route::patch('update-cart', "MainController@editCart");
+    Route::delete('cart/{id}', "MainController@delCart");
+    Route::post('cart/{id}', "MainController@savePage");
+
 
     Route::get('about', "MainController@about");
-    Route::get('contact', "MainController@contact");
+    Route::get('career', "MainController@career");
+    Route::get('blog', "MainController@blog");
+    Route::get('category/{slug}/{id}', "MainController@proDetails");
+    Route::get('partner', "MainController@partner");
+    Route::get('partner', "MainController@partner");
+    Route::get('vendors', "MainController@vendor");
 
     Route::any('search', "MainController@search");
 });
@@ -78,6 +113,9 @@ Route::group(['prefix' => '/main/'], function () {
 
 Route::group(['prefix' => '/account/'], function () {
     Route::get('/', "MainController@index")->middleware("users");
+    Route::delete('/{id}', "MainController@delFav")->middleware("users");
+
+
     Route::get('/re_order', "MainController@re_order")->middleware("users");
     Route::get('/profile', "MainController@profile")->middleware("users");
     Route::get('/order_history', "MainController@orderHistory")->middleware("users");

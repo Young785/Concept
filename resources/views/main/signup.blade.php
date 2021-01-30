@@ -60,8 +60,7 @@
               <p class="error">{{ $errors->first("address") }}</p>
     				</div>
             <div class="" style="margin-top: 52px;">
-              <input type="checkbox" name="" value="" style="margin-right: 8px;">Keep me
-              <a href="#">Signed in </a> <br> Uncheck if using a public device.
+              <input type="checkbox" name="vendor" style="margin-right: 8px;">Optional: Will like to become vendor/seller? check the checkbox to be a vendor!<br>
             </div>
             <div class="" style="margin-top: 20px;">
               <input type="checkbox" name="emailme" style="margin-right: 8px;">Email me about Rollbacks, special pricing, hot new items, gift ideas and more.
@@ -69,7 +68,7 @@
             <div class="" style="margin-top: 20px;">
               <input type="checkbox" required style="margin-right: 8px;">
                 By clicking Create Account, you acknowledge you have read and agreed to our
-              <a href="#">Terms of Use</a>  and  <a href="#">Privacy Policy</a> .
+              <a href="#">Terms of Use</a>  and  <a href="#">Privacy Policy</a>.
 
               </div>
 

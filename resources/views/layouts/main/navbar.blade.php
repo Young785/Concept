@@ -38,11 +38,11 @@
 						  <strong>FEATURES</strong> 
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						  <a class="dropdown-item" href="/partner">Blog</a>
-						  <a class="dropdown-item" href="/partner">Sell on Spree</a>
-						  <a class="dropdown-item" href="/career">Career</a>
-						  <a class="dropdown-item" href="/about">About Us</a>
-						  <a class="dropdown-item" href="/vendor">Advertise with us</a>
+						  <a class="dropdown-item" href="/main/partner">Blog</a>
+						  <a class="dropdown-item" href="/main/partner">Sell on Spree</a>
+						  <a class="dropdown-item" href="/main/career">Career</a>
+						  <a class="dropdown-item" href="/main/about">About Us</a>
+						  <a class="dropdown-item" href="/main/vendors">Advertise with us</a>
 						  <a class="dropdown-item" href="contact">Faq</a>
 						</div>
 					</li>
@@ -55,7 +55,7 @@
 					<li class="nav-form">
 							<div class="">
 								<div class="form-group has-search">
-									<form action="/search" method="POST" role="search">
+									<form action="/main/search" method="GET" role="search">
 										@csrf
 										<input type="text" class="form-control" name="q" placeholder="Search">
 										<button type="submit" class="btn btn-default">

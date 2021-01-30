@@ -3,88 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Category;
-use App\Mail\VendorAcceptedNotification;
 use App\Notifications\CategoryNotification;
 use App\Notifications\ProfileUpdatedNotification;
-use App\Notifications\UserAsVendorNotification;
-use App\Notifications\UserDeletedNotification;
+use App\Order;
 use App\Product;
 use App\User;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 
-class AdminController extends Controller
+class VendorController extends Controller
 {
     public function index()
     {
-            return view("pages.index");
-    }
-    public function loginPage()
-    {
-        return view("pages.login");
-    }
-    public function login()
-    {
-        $data = request()->validate([
-            'email' => "required",  
-            'password' => "required",
-        ]);
-
-        if (Auth::attempt($data)) {
-            if (Auth::user()->user_type == "admin") {
-                return redirect("/admin");
-            }elseif (Auth::user()->user_type == "vendor") {
-                return redirect("/vendor");
-            }else{
-                return redirect("/main/index");
-            }
-        }else{
-            return redirect("/pages/login")->with("notExist", "These credentials do not match our records.");
-        }
-    }
-    public function registerPage()
-    {
-        return view("pages.register");
-    }
-    public function register()
-    {
-        $data = request()->validate([
-            'username' => "required",
-            'fullname' => "required",
-            'phone' => "required",
-            'address' => "required",
-            'email' => "required|unique:users",
-            'password' => "required|min:5",
-            'confPass' => "required|same:password",
-        ]);
-
-        $item['username'] = request("username");
-        $item['fullname'] = request("fullname");
-        $item['phone'] = request("phone");
-        $item['address'] = request("address");
-        $item['email'] = request("email");
-        $item['password'] = Hash::make(request("password"));
-        
-        User::create($item);
-
-        $email = request("email");
-        $password = request("password");
-
-        Auth::attempt(['email' => $email, 'password' => $password]);
-        return redirect("/pages/index")->with("registered", "You registration was Successful!");
-
+        return view("vendor.index");
     }
     public function account()
     {
         $id = Auth::user()->id;
-        $admin = User::where("id", $id)->first();
+        $vendor = User::where("id", $id)->first();
 
-        return view("pages.account", compact("admin"));
-    }    
-    public function editAcc()
+        return view("vendor.account", compact("vendor"));
+    }
+    public function editAccount()
     {
         $id = Auth::user()->id;
         $dbEmail = Auth::user()->email;
@@ -117,65 +58,24 @@ class AdminController extends Controller
 
         Auth::user()->notify(new ProfileUpdatedNotification);
 
-        return redirect("/admin")->with("proUpdate", "Your account has been updated Successfully!");
-    }
-    public function users()
-    {
-        $users = User::where("user_type", "user")->paginate(10);
-        return view("pages.users", compact("users"));
-    }
-    public function delUsers($id)
-    {
-        User::where("id", $id)->delete();
-
-        session()->put("id", $id);
-
-        Auth::user()->notify(new UserDeletedNotification);
-
-        session()->forget("id");
-        return redirect("/admin/customers")->with("msg", "You deleted the user Successfully!");
-    }
-    public function makeVendor($id)
-    {
-        $user = User::where("id", $id)->first();
-        User::where("id", $id)->update(["user_type" => "vendor"]);
-
-        session()->put("id", $id);
-
-        $hash = md5( rand(0,1000));
-        session()->put("hash", $hash);
-
-        Mail::to($user->email)->send(new VendorAcceptedNotification($user));
-        Auth::user()->notify(new UserAsVendorNotification);
-
-        session()->forget("id");
-        return redirect("/admin/vendors")->with("vendor", "You have Successfully made the user a Vendor!");
-    }
-    public function vendors()
-    {
-        $vendors = User::where("user_type", "vendor")->get();
-        return view("pages.vendors", compact("vendors"));
-    }
-    public function unmakeVendor($id)
-    {
-        User::where("id", $id)->update(["user_type" => "user"]);
-
-        session()->put("id", $id);
-
-        Auth::user()->notify(new UserAsVendorNotification);
-
-        session()->forget("id");
-        return redirect("/admin/customers")->with("user", "You have Successfully made the vendor a User!");
+        return redirect("/vendor")->with("proUpdate", "Your account has been updated Successfully!");
     }
     public function categories()
     {
         $categories = Category::all()->sortByDesc("created_at");
         
-        return view("pages.categories", compact("categories"));
+        return view("vendor.category", compact("categories"));
+    }
+    public function myCat()
+    {
+        $id = Auth::user()->id;
+        $categories = Category::where("user_id", $id)->get();
+        
+        return view("vendor.my-category", compact("categories"));
     }
     public function addCategoryPage()
     {
-        return view("pages.add-category");
+        return view("vendor.add-category");
     }
     public function addCategory()   
     {
@@ -199,13 +99,13 @@ class AdminController extends Controller
 
         Category::create($item);
         Auth::user()->notify(new CategoryNotification);
-        return redirect("/admin/categories")->with("msg", "You have Successfully added a new Category!");
+        return redirect("/vendor/categories")->with("msg", "You have Successfully added a new Category!");
     }
     public function deleteCategory($id)
     {
         Category::where("id", $id)->delete();
 
-        return redirect("/admin/categories")->with("catDeleted", "Category Deleted Successfully!");
+        return redirect("/vendor/vendor-categories")->with("catDeleted", "Category Deleted Successfully!");
     }
     public function editCategory(Request $request, $id)
     {
@@ -222,7 +122,7 @@ class AdminController extends Controller
         }
         Category::where('id', $id)->update($data);
 
-        return redirect("/admin/categories")->with("catEdited", "Category Edited Successfully!");
+        return redirect("/vendor/vendor-categories")->with("catEdited", "Category Edited Successfully!");
     }
     public function products()
     {
@@ -233,12 +133,25 @@ class AdminController extends Controller
         }
 
         $products = Product::all();
-        return view("pages.products", compact("products", "pics"));
+        return view("vendor.products", compact("products", "pics"));
+    }
+    public function myProducts()
+    {
+        $pics = Product::all();
+        foreach ($pics as $pic) {
+            $pic['image_name'] = json_decode($pic['image_name'], true);
+        // $pics[0]['image_name']; 
+        }
+
+        $id = Auth::user()->id;
+        $products = Product::where("user_id", $id)->get();
+        
+        return view("vendor.my-products", compact("products", "pics"));
     }
     public function addProductsPage()
     {
         $getcat = Category::all();
-        return view("vendor.add-products", compact("getcat"));
+        return view("vendor.add-product", compact("getcat"));
     }
     public function addProducts()
     {
@@ -271,7 +184,7 @@ class AdminController extends Controller
         
         Product::create($data);
 
-        return redirect("/admin/products")->with("msg", "Product Created Successfully!");
+        return redirect("/vendor/products")->with("msg", "Product Created Successfully!");
     }
     public function deleteProduct($id)
     {
@@ -289,5 +202,40 @@ class AdminController extends Controller
         Product::where('id', $id)->update($data);
 
         return redirect("/admin/products")->with("prodEdited", "Product Edited Successfully!");
+    }
+    public function custOrderPage()
+    {
+        $id = Auth::user()->id;
+        $order = Order::where("vendor_id", $id)->where(["order_status" => "pending"])->get();
+
+        $completed = Order::where("vendor_id", $id)->where(["order_status" => "completed"])->get();
+
+        if (count($order) == null) {
+            return view("vendor.customer-order", compact("order", "completed"));
+        }else{
+            foreach ($order as $value) {
+                $user = User::where("id", $value->user_id)->first();
+                $product = Product::where("id", $value->product_id)->first();
+            }
+            return view("vendor.customer-order", compact("order", "completed", "user", "product"));
+        }
+        
+    }
+    public function orderPage($id)
+    {
+        $Authid = Auth::user()->id;
+        $order = Order::where("vendor_id", $Authid)->get();
+
+        foreach ($order as $value) {
+            $user = User::where("id", $value->user_id)->first();
+            $product = Product::where("id", $value->product_id)->first();
+        }
+        return view("vendor.order", compact("order","value", "user", "product"));
+    }
+    public function completeOrder($id)
+    {
+        Order::where("id", $id)->update(['order_status' => 'completed']);
+
+        return redirect("/vendor/customers-order")->with("completed", "Congratulation! You successfully Completed the Order.");
     }
 }

@@ -14,6 +14,12 @@
                   <strong>Success!</strong> Product Added to Cart Successfully. You can remove, update or Proceed with the buying Below. Thanks!
                 </div>
               @endif
+              @if (session()->has("mssg"))
+              <div class="alert alert-success alert-dismissible text-center" id="remove">
+                <a data-dismiss="alert" href="#" class="close" aria-label="close">&times;</a>
+                <strong>Success!</strong> Product removed from Cart successfully!
+              </div>
+            @endif
                 <!-- notification section -->
                 <!-- <div class="master d-flex">
                 <div class="d-flex aCenter">
@@ -32,7 +38,6 @@
                     </button>
                 </div>
             </div> -->
-
                 <!-- products in cart section -->
                 <div class="heading">
                     <h2>Your Cart : 2 <span>items</span></h2>
@@ -122,7 +127,7 @@
                                 </div>
                                 
                                 <div class="sLater d-flex">
-                                    <form action="/pages/cart/{{ $cart['id'] ?? '' }}" method="POST">
+                                    <form action="/main/cart/{{ $cart['id'] ?? '' }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button data-id="$id" class="btn btn-primary text-bold">
@@ -132,7 +137,7 @@
                                     <div class="vLine">
 
                                     </div>
-                                    <form action="/pages/cart/{{ $cart['id'] ?? '' }}" method="POST">
+                                    <form action="/main/cart/{{ $cart['id'] ?? '' }}" method="POST">
                                         @csrf
                                         <button href="" class="btn btn-primary text-bold ml-3">
                                             Save For Later

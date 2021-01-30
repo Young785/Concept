@@ -1,71 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>partner</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/partner.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-
-<body>
-
-    <!-- .navbar -->
-    <section class="navigation">
-        <div class="nav-container">
-            <div class="brand">
-                <a href="#!" style="text-transform: capitalize;">Spree</a>
-            </div>
-            <nav>
-                <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
-                <ul class="nav-list">
-                    <li class="nav-center">
-                        <a href="#!">fashion</a>
-                    </li>
-                    <li class="nav-center">
-                        <a href="#!">Health & beauty</a>
-                    </li>
-                    <li class="nav-center">
-                        <a href="#!">Electronics</a>
-                    </li>
-                    <li class="nav-center" id="navLast">
-                        <a href="#!">Groceries</a>
-                    </li>
-                    <li>
-                        <div class="">
-                            <div class="form-group has-search">
-                                <input type="text" class="form-control" placeholder="Search">
-                                <span class="fa fa-search form-control-feedback"></span>
-
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="border_ccc icons">
-
-                        <a href="" style="text-transform: capitalize;">
-                            Account
-                            <span>
-                                <img src="./icons/account.svg" alt="account" class="account">
-                            </span>
-                        </a>
-                    </li>
-                    <li class="icons">
-                        <a href="" style="text-transform: capitalize;">
-                            Cart
-                            <span>
-                                <img src="./icons/cart.svg" alt="">
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-        </div>
-    </section>
+@section('title', 'Spree - About Us')
+@include('layouts.main.header')
+<link rel="stylesheet" type="text/css" href="/main/css/partner.css">
+    @include('layouts.main.navbar')
 
     <!-- partner section -->
     <section class="partner">
@@ -79,7 +15,7 @@
                     If you love building and leading teams, start your own business as an Spree Service Partner,
                     delivering smiles to customers across your community. Apply today or sign up to learn more.
                 </p>
-                <a href="" class="button">
+                <a href="/main/partner" class="button">
                     Be Our fullfilment Partner
                 </a>
                 <br />

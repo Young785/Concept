@@ -82,6 +82,10 @@
 .nav-form{
   margin-top: -40px;
 }
+.del-form{
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+}
 .has-search .form-control-feedback {
     position: absolute;
     z-index: 2;

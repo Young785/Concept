@@ -8,6 +8,7 @@ use App\Mail\ForgotPasswordMail;
 use App\Mailing;
 use App\User;
 use App\Product;
+use App\SaveForLater;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,14 +36,39 @@ class MainController extends Controller
     {
         return view("main.contact");
     }
+    public function partner()
+    {
+        return view("main.partner");
+    }
+    public function blog()
+    {
+        return view("main.blog");
+    }
+    public function proDetails()
+    {
+        return view("main.product_detail");
+    }
+    public function career()
+    {
+        return view("main.career");
+    }
+    public function vendor()
+    {
+        return view("main.vendor");
+    }
     public function search()
     {
-        $q = Input::get('q');
-        $user = Product::where('name','LIKE','%'.$q.'%')->orWhere('description','LIKE','%'.$q.'%')->get();
-        if(count($user) > 0)
-            return view('main.search')->withDetails($user)->withQuery($q);
-        else 
-        return view ('welcome')->withMessage('No Details found. Try to search again !');
+        $q = request('q');
+
+        $category = Category::all();
+
+        $pics = Product::all();
+        foreach ($pics as $pic) {
+            $pic['image_name'] = json_decode($pic['image_name'], true);
+        }
+        $products = product::where('name','LIKE','%'.$q.'%')->orWhere('description','LIKE','%'.$q.'%')->get();
+        
+        return view('main.search', compact("pics", "products"))->withDetails($products)->withQuery($q);
     }
     public function registerPage()
     {
@@ -67,9 +93,15 @@ class MainController extends Controller
         $item['address'] = request("address");
         $item['email'] = request("email");
         $item['password'] = Hash::make(request("password"));
+        
+        if(request("vendor") == "on"){
+            $item['vendor_request'] = "Yes";
+        }else{
+            $item['vendor_request'] = "No";
+        }
+
         $user = User::create($item);
         $id = $user->id;
-
         $hash = md5( rand(0,1000));
         session()->put("hash", $hash);
         session()->put("permit", "hasPermission");
@@ -87,6 +119,7 @@ class MainController extends Controller
                
             }
         }
+
         Auth::attempt(['email' => $email, 'password' => $password]);
         Mail::to($email)->send(new EmailVerification($user));
         return redirect("/main/verify");
@@ -201,7 +234,36 @@ class MainController extends Controller
     }
     public function index()
     {
-        return view("main.profile.fav");
+        $prod_id = session()->get("req_url");
+
+        if($prod_id != null){
+            $data['user_id'] = Auth::user()->id;
+
+            $data['product_id'] = substr($prod_id, -1);
+
+            $data['status'] =   "No";
+            
+            SaveForLater::create($data);
+            session()->forget("req_url");
+
+            return redirect("/account")->with("saved", "Product saved to your Account Successfully!");
+        }
+        $auth = Auth::user()->id;
+        $saved = SaveForLater::join("products", "save_for_laters.product_id", "=", "products.id")
+        ->where("save_for_laters.user_id", $auth)->get();
+
+        $pics = Product::all();
+        foreach ($pics as $pic) {
+            $pic['image_name'] = json_decode($pic['image_name'], true);
+        }
+
+        return view("main.profile.fav", compact("pics", "saved"));
+    }
+    public function delFav($id)
+    {
+        SaveForLater::where("id", $id)->delete();
+
+        return redirect("/account")->with("msg", "You deleted the saved product Successfully!");
     }
     public function profile()
     {
@@ -240,6 +302,17 @@ class MainController extends Controller
         }
 
         return view("main/category", compact("slug", "catproduct", "pics"));
+    }
+    public function fullDetails($slug, $id)
+    {
+        $product = Product::where("id", $id)->first();
+
+        $category = Category::where("id", $product->category_id)->first();
+        $prod = Product::all()->where('id', $id);
+        foreach ($prod as $pic) {
+            $pic['image_name'] = json_decode($pic['image_name'], true);
+        }
+        return view("main/fulldetails", compact("product", "category", "pic"));
     }
     public function cart()
     {
@@ -316,6 +389,48 @@ class MainController extends Controller
             session()->flash('success', 'Cart updated successfully');
 
             // return redirect("/pages/cart")->with('msasg', "Product Updated successfully!");
+        }
+    }
+    public function delCart(Request $request)
+    {
+        if($request->id) {
+            $cart = session()->get('cart');
+
+            if(isset($cart[$request->id])) {
+                unset($cart[$request->id]);
+                session()->put('cart', $cart);
+            }
+            session()->flash('success', 'Product removed successfully');
+
+            return redirect("/main/cart")->with('mssg', "Product removed from Cart successfully!");
+        }
+     
+    }
+    public function savePage($id)
+    {
+        if (Auth::user() == null) {
+            session()->put("req_url", $_SERVER['PHP_SELF']);
+            return redirect("main/login")->with("mustLogin", "Please login to confirm your request!");
+        }elseif (Auth::user()->user_type != "user") {
+            session()->put("req_url", $_SERVER['PHP_SELF']);
+            return redirect("main/login")->with("mustLogin", "Please login to confirm your request!");
+        }else{
+            session()->put("req_url", $_SERVER['PHP_SELF']);
+
+            $prod_id = session()->get("req_url");
+
+        if($prod_id != null){
+            $data['user_id'] = Auth::user()->id;
+
+            $data['product_id'] = substr($prod_id, -1);
+            $data['sattus'] = "No";
+            
+            SaveForLater::create($data);
+            session()->forget("req_url");
+
+            return redirect("/account")->with("saved", "Product saved to your Account Successfully!");
+        }
+            return redirect("/account");
         }
     }
 }

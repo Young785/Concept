@@ -1,6 +1,6 @@
 @section('title', 'Spree - Contact Us')
 @include('layouts.main.header')
-<link rel="stylesheet" type="text/css" href="css/contact.css">
+<link rel="stylesheet" type="text/css" href="/main/css/contact.css">
     @include('layouts.main.navbar')
     <main>
         <section class="contact">

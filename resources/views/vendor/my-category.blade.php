@@ -1,5 +1,5 @@
-@include('layouts.vendorheader')
-@section('title', 'Concept - Blank Page')
+@section('title', 'Concept - Your Categories')
+@include('layouts.vendor.header')
 <body>
     <!-- ============================================================== -->
     <!-- main wrapper -->
@@ -8,14 +8,14 @@
         <!-- ============================================================== -->
         <!-- navbar -->
         <!-- ============================================================== -->
-        @include('layouts.vendornavbar')
+        @include('layouts.vendor.navbar')
         <!-- ============================================================== -->
         <!-- end navbar -->
         <!-- ============================================================== -->
         <!-- ============================================================== -->
         <!-- left sidebar -->
         <!-- ============================================================== -->
-        @include('layouts.vendorsidebar')
+        @include('layouts.vendor.sidebar')
         <!-- ============================================================== -->
         <!-- end left sidebar -->
         <!-- ============================================================== -->
@@ -31,13 +31,13 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">All Categories</h2>
+                                <h2 class="pageheader-title">Your Categories</h2>
                                 <p class="pageheader-text">Available Categories</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/admin" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                                            <li class="breadcrumb-item"><a href="/vendor" class="breadcrumb-link">Dashboard</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">your Categories</li>
                                         </ol>
                                     </nav>
                                 </div>
@@ -127,7 +127,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <a href="#" class="btn btn-secondary" data-dismiss="modal">No</a>
-                                                            <form action="/admin/categories/{{ $category->id }}" method="POST">
+                                                            <form action="/vendor/categories/{{ $category->id }}" method="POST">
                                                                 @csrf
                                                                 @METHOD('DELETE')
                                                                 <button class="btn btn-primary" type="submit">Yes</button>
@@ -149,7 +149,7 @@
                                                             $cat = App\Category::where("id", $category->id)->first();
                                                         @endphp
                                                         <div class="modal-body">
-                                                            <form action="/admin/categories/edit/{{ $category->id }}" method="POST" enctype="multipart/form-data">
+                                                            <form action="/vendor/categories/edit/{{ $category->id }}" method="POST" enctype="multipart/form-data">
                                                                 @csrf
                                                                 @METHOD('PATCH')
                                                                 <div class="form-group">
@@ -184,4 +184,4 @@
             </div>
             <!-- ============================================================== -->
           
-@include('layouts.vendorfooter')
+@include('layouts.vendor.footer')

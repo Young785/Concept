@@ -26,7 +26,7 @@
 									<a href="/main/partner">Sell on Spree</a>
 								</li>
 								<li>
-									<a href="/main/vendor/vendor">Advertise With Us</a>
+									<a href="/main/vendors">Advertise With Us</a>
 								</li>
 							</ul>
 						</div>

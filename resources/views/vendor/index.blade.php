@@ -1,4 +1,4 @@
-@include('layouts.header')
+@include('layouts.vendor.header')
 @section('title', 'Concept Admin Page')
 <body>
     <!-- ============================================================== -->
@@ -8,14 +8,14 @@
         <!-- ============================================================== -->
         <!-- navbar -->
         <!-- ============================================================== -->
-        @include('layouts.navbar')
+        @include('layouts.vendor.navbar')
         <!-- ============================================================== -->
         <!-- end navbar -->
         <!-- ============================================================== -->
         <!-- ============================================================== -->
         <!-- left sidebar -->
         <!-- ============================================================== -->
-        @include('layouts.sidebar')
+        @include('layouts.vendor.sidebar')
         <!-- ============================================================== -->
         <!-- end left sidebar -->
         <!-- ============================================================== -->
@@ -57,68 +57,57 @@
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="text-muted">Total Users</h5>
-                                        <div class="metric-value d-inline-block">
-                                            <h1 class="mb-1">{{ count([App\User::where("user_type", "user")->get()]) }}</h1>
-                                        </div>
-                                        <div class="metric-label d-inline-block float-right text-success font-weight-bold">
-                                            <span><i class="fa fa-fw fa-arrow-up"></i></span>
-                                            {{-- <span>5.86%</span> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="text-muted">Total Vendors</h5>
-                                        <div class="metric-value d-inline-block">
-                                            <h1 class="mb-1">{{ count([App\User::where("user_type", "vendor")->get()]) }}</h1>
-                                        </div>
-                                        <div class="metric-label d-inline-block float-right text-success font-weight-bold">
-                                            <span><i class="fa fa-fw fa-arrow-up"></i></span>
-                                            {{-- <span>5.86%</span> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="text-muted">Total Orders {{ count([App\Order::all()]) }}</h5>
-                                        <div class="metric-value d-inline-block">
-                                            Completed
-                                            <h1 class="mb-1">{{ count([App\Order::where("order_status", "completed")->get()]) }}</h1>
-                                        </div>
-                                        <div class="metric-value d-inline-block" style="margin-left:50px">
-                                            Uncompleted
-                                            <h1 class="mb-1">{{ count([App\Order::where("order_status", "pending")->get()]) }}</h1>
-                                        </div>
-                                        <div class="metric-label d-inline-block float-right text-success font-weight-bold">
-                                            <span><i class="fa fa-fw fa-arrow-up"></i></span>
-                                            {{-- <span>5.86%</span> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @php
-                                    $jun = App\Order::get("paid_amount");
-                                    $subTotal = 0;
-                                    foreach ($jun as  $item) {
-                                        $subTotal += $item['price'];
-                                    }
-                            @endphp
-                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                <div class="card">
-                                    <div class="card-body">
                                         <h5 class="text-muted">Total Revenue</h5>
                                         <div class="metric-value d-inline-block">
-                                            <h1 class="mb-1">${{ $subTotal }}</h1>
+                                            <h1 class="mb-1">$12099</h1>
                                         </div>
                                         <div class="metric-label d-inline-block float-right text-success font-weight-bold">
                                             <span><i class="fa fa-fw fa-arrow-up"></i></span><span>5.86%</span>
                                         </div>
                                     </div>
+                                    <div id="sparkline-revenue"></div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-muted">Affiliate Revenue</h5>
+                                        <div class="metric-value d-inline-block">
+                                            <h1 class="mb-1">$12099</h1>
+                                        </div>
+                                        <div class="metric-label d-inline-block float-right text-success font-weight-bold">
+                                            <span><i class="fa fa-fw fa-arrow-up"></i></span><span>5.86%</span>
+                                        </div>
+                                    </div>
+                                    <div id="sparkline-revenue2"></div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-muted">Refunds</h5>
+                                        <div class="metric-value d-inline-block">
+                                            <h1 class="mb-1">0.00</h1>
+                                        </div>
+                                        <div class="metric-label d-inline-block float-right text-primary font-weight-bold">
+                                            <span>N/A</span>
+                                        </div>
+                                    </div>
+                                    <div id="sparkline-revenue3"></div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-muted">Avg. Revenue Per User</h5>
+                                        <div class="metric-value d-inline-block">
+                                            <h1 class="mb-1">$28000</h1>
+                                        </div>
+                                        <div class="metric-label d-inline-block float-right text-secondary font-weight-bold">
+                                            <span>-2.00%</span>
+                                        </div>
+                                    </div>
+                                    <div id="sparkline-revenue4"></div>
                                 </div>
                             </div>
                         </div>
@@ -589,4 +578,4 @@
     </div>
     <!-- ============================================================== -->
     <!-- end main wrapper  -->
-@include('layouts.footer')
+@include('layouts.vendor.footer')

@@ -39,6 +39,12 @@
             <strong>Success!</strong> Your password was changed Successfully! You can now login with the new Password
           </div>
         @endif
+         @if (session()->has("mustLogin"))
+          <div class="alert alert-danger alert-dismissible text-center">
+            <a data-dismiss="alert" href="#" class="close" aria-label="close">&times;</a>
+            <strong>Error! </strong> Please login to confirm your request! Dont't have an account? <a href="/main/register">Register</a>
+          </div>
+        @endif
           
     			<!--
     			<div class="alert alert-danger alert-dismissible fade show" role="alert">Incorrect username or password.</div> -->

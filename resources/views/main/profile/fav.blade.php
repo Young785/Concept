@@ -4,66 +4,59 @@
 @include('layouts.main.navbar')
     <main>
     @include('layouts.main.sidebar')
+    
         <div class="pCol2">
+            @if (session()->has("saved"))
+                <div class="alert alert-success alert-dismissible text-center" id="remove">
+                    <a data-dismiss="alert" href="#" class="close" aria-label="close">&times;</a>
+                    <strong>Success! </strong>"Product saved to your Account Successfully!
+                </div>
+            @endif
+            @if (session()->has("msg"))
+                <div class="alert alert-success alert-dismissible text-center" id="remove">
+                    <a data-dismiss="alert" href="#" class="close" aria-label="close">&times;</a>
+                    <strong>Success! </strong> You deleted the saved product Successfully!
+                </div>
+            @endif
             <div class="heading">
                 <h2>My Favs</h2>
             </div>
             <hr/>
             <div class="row">
-                <div class="col-lg-12" style="padding: 0px;">
+            @foreach ($saved as $item)
+                 <div class="col-lg-12" style="padding: 0px;">
                     <div class="row favRow">
                         <div class="col-sm-2">
                             <div class="favImg">
-                                <img src="/main/images/row1.jpg" alt="">
+                                <img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" alt="{{ $item->name }}">
                             </div>
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4">
                             <p>
-                                Smith & Cult Nailed Lacquer,Lovers,Creep
+                                {{$item->name}}
                             </p>
                         </div>
                         <div class="col-sm-2">
                             <p class="price">
-                                $299.99
+                                ${{$item->price}}
                             </p>
                         </div>
                         <div class="col-sm-2">
-                            <button class="cartBtn"><i class="fas fa-cart-plus"></i></button>
+                            <button class="btn btn-primary"><i class="fa fa-cart-plus"></i></button>
                         </div>
                         <div class="col-sm-1 delete">
-                            <a href="#" class="delete">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
+                        <form action="/account/{{$item->id}}" class="del-form" method="POST">
+                            @csrf
+                            @METHOD('DELETE')
+                            <button href="#" class="btn btn-primary">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12" style="padding: 0px;">
-                    <div class="row favRow">
-                        <div class="col-sm-2">
-                            <div class="favImg">
-                                <img src="/main/images/row3.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-sm-5">
-                            <p>
-                                Smith & Cult Nailed Lacquer,Lovers,Creep
-                            </p>
-                        </div>
-                        <div class="col-sm-2">
-                            <p class="price">
-                                $299.99
-                            </p>
-                        </div>
-                        <div class="col-sm-2">
-                            <button class="cartBtn"><i class="fas fa-cart-plus"></i></button>
-                        </div>
-                        <div class="col-sm-1 delete">
-                            <a href="#" class="delete">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            @endforeach
             </div>
         </div>
     </section>

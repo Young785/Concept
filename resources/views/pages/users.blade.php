@@ -86,6 +86,7 @@
                                                         <th class="border-0">Address</th>
                                                         <th class="border-0">Phone</th>
                                                         <th class="border-0">Gender</th>
+                                                        <th class="border-0">Vendor Request</th>
                                                         <th class="border-0">Date</th>
                                                         <th class="border-0">Action</th>
                                                     </tr>
@@ -113,12 +114,17 @@
                                                                     @else
                                                                     <td>Female</td>
                                                                 @endif
+                                                                <td>{{ $user->vendor_request }}</td>
                                                                 <td>{{ $user->created_at->diffForHumans() }} </td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#makeVendor{{ $user->id }}">
-                                                                        Make Vendor
-                                                                    </a>    
-                                                                </td>
+                                                                @if ($user->vendor_request == "Yes")
+                                                                    <td>
+                                                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#makeVendor{{ $user->id }}">
+                                                                            Make Vendor
+                                                                        </a>    
+                                                                    </td>
+                                                                    @else
+                                                                @endif
+                                                               
                                                                 <td>
                                                                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ $user->id }}">
                                                                         <i class="fa fa-fw fa-trash"></i>
@@ -171,7 +177,7 @@
                                                     </a>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Are you sure you want to delete this User?</p>
+                                            <p>Are you sure you want to make this User a Vendor?</p>
                                         </div>
                                         <div class="modal-footer">
                                             <a href="#" class="btn btn-secondary" data-dismiss="modal">No</a>
