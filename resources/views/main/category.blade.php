@@ -51,9 +51,11 @@
             <div class="row w20Row" style="margin-left: -2px;">
                 @foreach ($catproduct as $item)
                     <div class="col-lg-3 w20">
-                        <div class="w20Img">
-                            <img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" alt="{{ $item->name }}">
-                        </div>
+						<a href="/main/category/hoodie/product/{{ $item->id }}"> 
+							<div class="w20Img">
+								<img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" alt="{{ $item->name }}">
+							</div>
+						</a>
                         <div class="w20Desc">
                             <div>
                                 <span class="font-weight500">{{ $item->name }}</span>

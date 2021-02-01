@@ -34,11 +34,11 @@
                                                 <a href="#" onclick="markRead()" class="list-group-item list-group-item-action active">
                                                     <div class="notification-info">
                                                         <div class="notification-list-user-img">
-                                                            @if(count([$user->user_image]) != 1)
-                                                            <img src="/assets/images/default.png" alt="" class="user-avatar-md rounded-circle">
-                                                            @else
-                                                            <img src="{{ asset("/images/users") }}/{{ $user->user_image }}" alt="" class="user-avatar-md rounded-circle">
-                                                        @endif
+                                                            @if(empty($user->user_image))
+                                                                <img src="/assets/images/default.png" alt="" class="user-avatar-md rounded-circle">
+                                                                @else
+                                                                <img src="{{ asset("/images/users") }}/{{ $user->user_image }}" alt="" class="user-avatar-md rounded-circle">
+                                                            @endif
                                                         </div>
                                                         <div class="notification-list-user-block"><span class="notification-list-user-name">{{ $item->id}}</span>
                                                             {{-- {{ $item->data['notification'] }}

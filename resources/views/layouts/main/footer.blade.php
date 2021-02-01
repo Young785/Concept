@@ -72,6 +72,7 @@
     <!-- bootstap bundle js -->
     <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
 <script type="text/javascript" src="/main/js/popper.min"></script>
+<script src="/assets/my.js"></script>
 <script type="text/javascript" src="/main/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   

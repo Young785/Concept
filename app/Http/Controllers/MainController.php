@@ -6,10 +6,15 @@ use App\Category;
 use App\Mail\EmailVerification;
 use App\Mail\ForgotPasswordMail;
 use App\Mailing;
+use App\Notifications\AdminOrderNotification;
+use App\Notifications\VendorOrderNotification;
+use App\Order;
 use App\User;
 use App\Product;
 use App\SaveForLater;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+use Stripe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +28,7 @@ class MainController extends Controller
         $category = Category::all();
 
         $pics = Product::all();
+
         foreach ($pics as $pic) {
             $pic['image_name'] = json_decode($pic['image_name'], true);
         }
@@ -148,7 +154,7 @@ class MainController extends Controller
                 Mailing::where("user_id", $id)->update(['email_status' => "yes"]);
                 session()->forget("hash");
                 session()->forget("permit");
-                return redirect("/main/profile")->with("msg", "Your account has been verified Successfully");
+                return redirect("/account")->with("verify", "Your account has been verified Successfully!");
             }elseif($session == null){
                 return redirect("/main/login")->with("msgNopermit", "You have no access there!");
             }else{
@@ -274,7 +280,16 @@ class MainController extends Controller
     }
     public function orderHistory()
     {
-        return view("main.profile.order_history");
+        $id = Auth::user()->id;
+        $order = Order::where("id", $id)->get();
+        $order_products = Order::join("products", "orders.product_id", "=", "products.id")->where("orders.user_id", $id)->get();
+        // dd($order_products);
+        $pics = Product::all();
+
+        foreach ($pics as $pic) {
+            $pic['image_name'] = json_decode($pic['image_name'], true);
+        }
+        return view("main.profile.order_history", compact("order", "order_products", "pics"));
     }
     public function addressPage()
     {
@@ -316,6 +331,8 @@ class MainController extends Controller
     }
     public function cart()
     {
+        // dd(session("cart"));
+        
         if (session('cart') != null) {
             $session = session('cart');
             foreach ($session as $value) {
@@ -347,6 +364,7 @@ class MainController extends Controller
                         "name" => $product->name,
                         "quantity" => 1,
                         "price" => $product->price,
+                        "vendor_id" => $product->user_id,
                         "size" => 'S',
                         "image_name" => $car
                     ]
@@ -367,6 +385,7 @@ class MainController extends Controller
             "id" => $id,
             "name" => $product->name,
             "quantity" => 1,
+            "vendor_id" => $product->user_id,
             "price" => $product->price,
             "size" => 'S',
             "image_name" => $car,
@@ -432,5 +451,75 @@ class MainController extends Controller
         }
             return redirect("/account");
         }
-    }
+        }
+    
+    
+        public function checkout()
+        {   
+            \Stripe\Stripe::setApiKey('sk_test_51IFPayLM8gMb7ledDqKykMlZbymziH8Y5VapHl6Na5vZaFUZvO91Yf6RNaWQUEjlltxzHd59hFWseENJIl0dVFcl00VucYQh0g');
+            $user = Auth::user();
+            $cart = session('cart');
+
+            $subTotal = 0;
+            foreach ($cart as  $item) {
+                $subTotal += $item['price'];
+            }
+            $amount = $subTotal;
+            $amount *= 100;
+            $amount = (int) $amount;
+            
+            $payment_intent = \Stripe\PaymentIntent::create([
+                'description' => 'Stripe Payment',
+                'description' => 'Payment made from User Id ' .$user->id. ", Name: " .$user->username. ", Email: " .$user->email. ", Phone No: " . $user->phone. ", Address: " .$user->address. ", Vendor Satus: " . $user->vendor_request. ".",
+                'amount' => $amount,
+                'currency' => "USD",
+            'payment_method_types' => ['card'],
+            ]);
+            $intent = $payment_intent->client_secret;
+            
+            $data['user_id'] = $user->id;
+            $data['order_status'] = "pending";
+            // if(count($cart) > 1){
+                foreach ($cart as $key => $value) {
+                    $data['vendor_id'] = $value['vendor_id'];
+        
+                    $data['product_id'] = $value['id'];
+
+                    $data['quantity'] = $value['quantity'];
+        
+                    $data['paid_amount'] = $value['price'];
+        
+                    $order = Order::create($data);
+        
+                    }
+            
+            // }else{
+            //     $data['vendor_id'] = $cart['vendor_id'];
+        
+            //     $data['product_id'] = $cart['id'];
+    
+            //     $data['paid_amount'] = $cart['price'];
+    
+            //     $order = Order::create($data);
+            // }
+            $user_o = User::where("id", $value['vendor_id'])->first();
+            session()->put("id", $value['vendor_id']);
+            if ($user_o->user_type == "admin") {
+                Auth::user()->notify(new AdminOrderNotification);
+            }elseif($user_o->user_type == "vendor"){
+                Auth::user()->notify(new AdminOrderNotification);
+                Auth::user()->notify(new VendorOrderNotification);
+            }
+                
+            return view('checkout.checkout', compact("intent"));
+    
+        }
+    
+        public function afterPayment()
+        {
+            session()->forget("cart");
+            session()->forget("id");
+            
+            return redirect("/account/order_history")->with("msg","Your Order has been placed Successfully!");
+        }
 }

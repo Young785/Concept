@@ -12,42 +12,46 @@
 */
 Route::get("/", "MainController@home");
 
+
 Route::get("/pages/login", "AdminController@loginPage");
 Route::get("/pages/login/verify/verificationId={id}", "AdminController@loginPage");
 Route::post("/pages/login", "AdminController@login");
 Route::get("/pages/register", "AdminController@registerPage");
 Route::post("/pages/register", "AdminController@register");
 Route::get('/logout', function () {
+    session()->forget("cart");
     Auth::logout();
-
     return redirect("/");
 });
 
-Route::group(['prefix' => '/admin'], function () {
-    Route::get("/", "AdminController@index")->middleware("access");
-    Route::get("/account", "AdminController@account")->middleware("access");
-    Route::patch("/account", "AdminController@editAcc")->middleware("access");
+Route::group(['prefix' => '/admin/'], function () {
+    Route::get("", "AdminController@index")->middleware("access");
+    Route::get("account", "AdminController@account")->middleware("access");
+    Route::patch("account", "AdminController@editAcc")->middleware("access");
 
-    Route::get("/customers", "AdminController@users")->middleware("access");
-    Route::delete("/customers/{id}", "AdminController@delUsers")->middleware("access");
-    Route::post("/customers/{id}", "AdminController@makeVendor")->middleware("access");
+    Route::get("customers", "AdminController@users")->middleware("access");
+    Route::delete("customers/{id}", "AdminController@delUsers")->middleware("access");
+    Route::post("customers/{id}", "AdminController@makeVendor")->middleware("access");
 
-    Route::post("/vendors/{id}", "AdminController@unmakeVendor")->middleware("access");
+    Route::post("vendors/{id}", "AdminController@unmakeVendor")->middleware("access");
 
-    Route::get("/vendors", "AdminController@vendors")->middleware("access");
+    Route::get("vendors", "AdminController@vendors")->middleware("access");
 
-    Route::get("/categories", "AdminController@categories")->middleware("access");
-    Route::get("/add-category", "AdminController@addCategoryPage")->middleware("access");
-    Route::post("/add-category", "AdminController@addCategory")->middleware("access");
-    Route::delete("/categories/{id}", "AdminController@deleteCategory")->middleware("access");
-    Route::patch("/categories/edit/{id}", "AdminController@editCategory")->middleware("access");
+    Route::get("categories", "AdminController@categories")->middleware("access");
+    Route::get("add-category", "AdminController@addCategoryPage")->middleware("access");
+    Route::post("add-category", "AdminController@addCategory")->middleware("access");
+    Route::delete("categories/{id}", "AdminController@deleteCategory")->middleware("access");
+    Route::patch("categories/edit/{id}", "AdminController@editCategory")->middleware("access");
 
-    Route::get("/products", "AdminController@products")->middleware("access");
-    Route::get("/add-products", "AdminController@addProductsPage")->middleware("access");
-    Route::post("/add-products", "AdminController@addProducts")->middleware("access");
-    Route::delete("/products/{id}", "AdminController@deleteProduct")->middleware("access");
-    Route::patch("/products/edit/{id}", "AdminController@editProduct")->middleware("access");
+    Route::get("products", "AdminController@products")->middleware("access");
+    Route::get("add-products", "AdminController@addProductsPage")->middleware("access");
+    Route::post("add-products", "AdminController@addProducts")->middleware("access");
+    Route::delete("products/{id}", "AdminController@deleteProduct")->middleware("access");
+    Route::patch("products/edit/{id}", "AdminController@editProduct")->middleware("access");
 
+    Route::get("customers-order/{id}", "AdminController@orderPage")->middleware("access");
+  
+    
 });
 
 
@@ -79,6 +83,10 @@ Route::group(['prefix' => '/vendor/'], function () {
 // Main Page
 
 Route::group(['prefix' => '/main/'], function () {
+    Route::get('checkout','MainController@checkout');
+    Route::post('checkout','MainController@afterpayment')->name('checkout.credit-card');
+    // Route::get('/stripe', 'MainController@stripe');
+    // Route::post('/stripe', 'MainController@stripePost')->name('stripe.post');
     Route::get('register', "MainController@registerPage");
     Route::post('register', "MainController@register");
     Route::get('verify', "MainController@verifyPage");
@@ -102,6 +110,7 @@ Route::group(['prefix' => '/main/'], function () {
     Route::get('about', "MainController@about");
     Route::get('career', "MainController@career");
     Route::get('blog', "MainController@blog");
+    Route::get('contact', "MainController@contact");
     Route::get('category/{slug}/{id}', "MainController@proDetails");
     Route::get('partner', "MainController@partner");
     Route::get('partner', "MainController@partner");

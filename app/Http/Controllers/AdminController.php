@@ -8,8 +8,10 @@ use App\Notifications\CategoryNotification;
 use App\Notifications\ProfileUpdatedNotification;
 use App\Notifications\UserAsVendorNotification;
 use App\Notifications\UserDeletedNotification;
+use App\Order;
 use App\Product;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +21,27 @@ use Illuminate\Support\Facades\Mail;
 class AdminController extends Controller
 {
     public function index()
-    {
-            return view("pages.index");
+    {   
+        $order_products = Product::rightjoin("orders", "orders.product_id", "=", "products.id")->join("users", "orders.user_id", "=", "users.id")->get();
+        $orders = Order::all();
+        // get record for the last 6 month
+        $six_month = [];
+        $month_count = [];
+        for ($i = 3; $i > -1; $i--) {
+            $dt = Order::
+                whereYear('created_at', Carbon::now()->subMonths($i)->format('Y'))
+                ->whereMonth('created_at', Carbon::now()->subMonths($i)->format('m'))
+                ->get()->sum('paid');
+            array_push($six_month, $dt);
+            array_push($month_count, Carbon::now()->subMonths($i)->format('M'));
+        }
+        // dd($test);
+        foreach ($order_products as $pic) {
+          $pic['image_name'] = json_decode($pic['image_name'], true);
+        //   dd($six_month);
+        //   dd($order_products["image_name"]);
+        }
+        return view("pages.index", compact("order_products", "pic", "six_month","month_count"));
     }
     public function loginPage()
     {
@@ -238,7 +259,7 @@ class AdminController extends Controller
     public function addProductsPage()
     {
         $getcat = Category::all();
-        return view("vendor.add-products", compact("getcat"));
+        return view("pages.add-products", compact("getcat"));
     }
     public function addProducts()
     {
@@ -289,5 +310,16 @@ class AdminController extends Controller
         Product::where('id', $id)->update($data);
 
         return redirect("/admin/products")->with("prodEdited", "Product Edited Successfully!");
+    }
+    public function orderPage($id)
+    {
+        $Authid = Auth::user()->id;
+        $order = Order::where("vendor_id", $Authid)->get();
+
+        foreach ($order as $value) {
+            $user = User::where("id", $value->user_id)->first();
+            $product = Product::where("id", $value->product_id)->first();
+        }
+        return view("vendor.order", compact("order","value", "user", "product"));
     }
 }

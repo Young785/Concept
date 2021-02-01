@@ -142,7 +142,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (count($users) == 1)
+                            @if (!empty($user))
                                 
                             <div class="modal fade" id="exampleModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">

@@ -18,6 +18,12 @@
                     <strong>Success! </strong> You deleted the saved product Successfully!
                 </div>
             @endif
+            @if (session()->has("verify"))
+                <div class="alert alert-success alert-dismissible text-center" id="remove">
+                    <a data-dismiss="alert" href="#" class="close" aria-label="close">&times;</a>
+                    <strong>Success! </strong> Your account has been verified Successfully!
+                </div>
+            @endif
             <div class="heading">
                 <h2>My Favs</h2>
             </div>

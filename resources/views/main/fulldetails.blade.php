@@ -51,11 +51,15 @@
                                 <img src="{{ asset("images/products") }}/{{ $pic->image_name[2] }}" class="other-img" alt="{{ $product->name }}">
                             </a>
                         </div>
+                        @if (count([$pic]) > 2)
                         <div class="sImg">
                             <a class="cart-li active" onclick="changeImage(this)">
                                 <img src="{{ asset("images/products") }}/{{ $pic->image_name[3] }}" class="other-img" alt="{{ $product->name }}">
                             </a>
                         </div>
+                        @else
+                        @endif
+                        
                     </div>
                     <div class="mainImg">
                         {{-- <li class="cart-li active" onclick="changeImage(this)"> --}}
@@ -87,7 +91,7 @@
                     </div> -->
                         <div>
                             <h4 class="price mt-3 mb-3">
-                                {{ $product->price }}
+                                ${{ $product->price }}
                             </h4>
                         </div>
                         <div class="qtySection d-flex mt-4">

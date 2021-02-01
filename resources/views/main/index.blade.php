@@ -48,7 +48,7 @@
 			@if (count([$products]) == 1)
 				<div class="mt-2 mb-2">
 					<div class="">
-						<div class="d-flex space-between fs-15 mt-3" style="    margin-top: 44px !important;">
+						<div class="d-flex space-between fs-15 mt-3" style="margin-top: 44px !important;">
 							<div>
 								<h4 class="fs-15"> <b>{{ $cat->category_name }}</b> </h4>
 							</div>
@@ -62,9 +62,11 @@
 						
 						@foreach ($products as $item)
 							<div class="col-lg-3 w20">
-								<div class="w20Img">
-									<img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" alt="{{ $item->name }}">
-								</div>
+								<a href="/main/category/hoodie/product/{{ $item->id }}"> 
+									<div class="w20Img">
+										<img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" alt="{{ $item->name }}">
+									</div>
+								</a>
 								<div class="w20Desc">
 									<div>
 										<span class="font-weight500">{{ $item->name }}</span>

@@ -39,10 +39,11 @@
                 </div>
             </div> -->
                 <!-- products in cart section -->
-                <div class="heading">
-                    <h2>Your Cart : 2 <span>items</span></h2>
-                </div>
+               
                 @if(session('cart'))
+                <div class="heading">
+                    <h2>Your Cart : {{ count(session('cart')) }} <span>items</span></h2>
+                </div>
                     @foreach(session('cart') as $id => $cart)
                         <div class="productRow d-flex">
                             <div class="d-flex">
@@ -194,13 +195,39 @@
                             Total
                         </p>
                         <p class="text-bold">
-                            $418.99
+                            @php
+                            $jun = session('cart');
+                            $subTotal = 0;
+                            foreach ($jun as  $item) {
+                                $subTotal += $item['price'];
+                            }
+                        echo "$".$subTotal."";
+                    @endphp
                         </p>
                     </div>
                     <div class="cartBtn">
-                        <button class="cart mt-3">
-                            Checkout
-                        </button>
+                        @if (Auth::user()  == null)
+                            <a href="/main/login">
+                                <button class="cart mt-3">
+                                    Checkout
+                                </button>
+                            </a>    
+                            @elseif(Auth::user()->user_type != "user")
+                            <a href="/main/login">
+                                <button class="cart mt-3">
+                                    Checkout
+                                </button>
+                            </a>
+                            @else
+                            <form action="/main/checkout" method="GET">
+                                @csrf
+                                <button class="cart mt-3">
+                                    Checkout
+                                </button>
+                            </form>
+                        @endif
+                       
+                        
                         <button class="paypal mt-3 d-flex mb-3">
                             <i class="fab fa-paypal"></i>
                             <span class="ml-2" style="color: #263B80;">pay<span style="color: #139AD6;">Pal</span>

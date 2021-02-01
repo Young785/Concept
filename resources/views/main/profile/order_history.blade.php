@@ -6,69 +6,57 @@
     @include('layouts.main.sidebar')
 
             <div class="pCol2">
+                @if (session()->has("msg"))
+                        <div class="alert alert-success text-center col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12" id="remove">
+                            Your Order has been placed Successfully!
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        </div>
+                    @endif
                 <div class="heading">
                     <h2>Order History</h2>
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="col-lg-12" style="padding: 0px;">
-                        <div class="row favRow">
-                            <div class="col-sm-2">
-                                <div class="favImg">
-                                    <img src="/main/images/row1.jpg" alt="">
+                    @foreach ($order_products as $item)
+                    {{-- {{ dd($item) }} --}}
+                        <div class="col-lg-12" style="padding: 0px;">
+                            <div class="row favRow">
+                                <div class="col-sm-2">
+                                    <div class="favImg">
+                                        <img src="{{ asset('/images/products/') }}/{{ $pics[$loop->index]['image_name'][0] }}" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-3">
+                                    <p>
+                                        {{ $item->name }}
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="price">
+                                        ${{ $item->price }}
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="date">
+                                        {{ $item->created_at->diffForHumans() }}
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    @if ($item->order_status == "completed")
+                                        <button class="btn btn-success">Completed</button>
+                                        @else
+                                        <button class="btn btn-warning">Pending</button>
+                                    @endif
+                                </div>
+                                <div class="col-sm-1 delete" style="margin-left: 20px;">
+                                    <a href="#" class="delete">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-sm-5">
-                                <p>
-                                    Smith & Cult Nailed Lacquer,Lovers,Creep
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="price">
-                                    $299.99
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="date">
-                                    12/08/2020
-                                </p>
-                            </div>
-                            <div class="col-sm-1 delete">
-                                <a href="#" class="delete">
-                                    <i class="far fa-trash-alt"></i>
-                                </a>
-                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-12" style="padding: 0px;">
-                        <div class="row favRow">
-                            <div class="col-sm-2">
-                                <div class="favImg">
-                                    <img src="/main/images/row3.jpg" alt="">
-                                </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <p>
-                                    Smith & Cult Nailed Lacquer,Lovers,Creep
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="price">
-                                    $299.99
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="date">
-                                    12/08/2020
-                                </p>
-                            </div>
-                            <div class="col-sm-1 delete">
-                                <a href="#" class="delete">
-                                    <i class="far fa-trash-alt"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </section>
