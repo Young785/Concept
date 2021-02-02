@@ -25,23 +25,40 @@ class AdminController extends Controller
         $order_products = Product::rightjoin("orders", "orders.product_id", "=", "products.id")->join("users", "orders.user_id", "=", "users.id")->get();
         $orders = Order::all();
         // get record for the last 6 month
-        $six_month = [];
+        $month_amount = [];
         $month_count = [];
-        for ($i = 3; $i > -1; $i--) {
+        for ($i = 12; $i > -1; $i--) {
             $dt = Order::
                 whereYear('created_at', Carbon::now()->subMonths($i)->format('Y'))
                 ->whereMonth('created_at', Carbon::now()->subMonths($i)->format('m'))
-                ->get()->sum('paid');
-            array_push($six_month, $dt);
+                ->get()->sum('paid_amount');
+            array_push($month_amount, $dt);
             array_push($month_count, Carbon::now()->subMonths($i)->format('M'));
         }
-        // dd($test);
+        $sales = [];
+        for ($i = 0; $i > -1; $i--) {
+            $dt = Order::
+                whereYear('created_at', Carbon::now()->subMonths($i)->format('Y'))
+                ->whereMonth('created_at', Carbon::now()->subMonths($i)->format('m'))
+                ->get()->sum('paid_amount');
+            array_push($sales, $dt);
+        }
+        // dd($sales);
+        $number_of_users = [];
+        for ($i = 0; $i > -1; $i--) {
+            $user = User::
+                whereYear('created_at', Carbon::now()->subMonths($i)->format('Y'))
+                ->whereMonth('created_at', Carbon::now()->subMonths($i)->format('m'))
+                ->get();
+            array_push($number_of_users, $user);
+        }
+        // dd($number_of_users);
+
         foreach ($order_products as $pic) {
           $pic['image_name'] = json_decode($pic['image_name'], true);
-        //   dd($six_month);
         //   dd($order_products["image_name"]);
         }
-        return view("pages.index", compact("order_products", "pic", "six_month","month_count"));
+        return view("pages.index", compact("order_products", "pic", "month_amount", "number_of_users","sales","month_count"));
     }
     public function loginPage()
     {
