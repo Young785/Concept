@@ -19,36 +19,13 @@
 					<li class="nav-center">
 						<a href="/">Home</a>
 					</li>
-					<li class="dropdown">
-						<button class="btn btn-fixed dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						 <strong>CATEGORIES</strong> 
-						</button>
-						@if ($cat != null)
-						@foreach ($cat as $item)
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="/main/category/{{ $item->category_slug }}">{{ $item->category_name }}</a>
-							</div>
-							@endforeach
-							@else
+					
+					@foreach ($cat as $item)
+						<li class="nav-center">
+							<a href="/main/about">{{ $item->category+_name }}</a>
 						</li>
-						@endif
-						
-					<li class="dropdown">
-						<button class="btn btn-fixed dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						  <strong>FEATURES</strong> 
-						</button>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						  <a class="dropdown-item" href="/main/partner">Blog</a>
-						  <a class="dropdown-item" href="/main/partner">Sell on Spree</a>
-						  <a class="dropdown-item" href="/main/career">Career</a>
-						  <a class="dropdown-item" href="/main/about">About Us</a>
-						  <a class="dropdown-item" href="/main/vendors">Advertise with us</a>
-						  <a class="dropdown-item" href="contact">Faq</a>
-						</div>
-					</li>
-					<li class="nav-center">
-						<a href="/main/about">About Us</a>
-					</li>
+					@endforeach
+
 					<li class="nav-center" id="navLast">
 						<a href="/main/contact">Contact Us</a>
 					</li>
